@@ -12,8 +12,11 @@ public final class Main extends JavaPlugin implements Listener {
     private static Economy econ = null;
     private static final Logger log = Logger.getLogger("Minecraft");
 
+
+
     @Override
     public void onEnable() {
+
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(new SellPlugin(this),this);
@@ -26,6 +29,7 @@ public final class Main extends JavaPlugin implements Listener {
         this.getCommand("sell").setExecutor(new SellPlugin(this));
         this.getCommand("sellhand").setExecutor(new SellPlugin(this));
         this.getCommand("sellinv").setExecutor(new SellPlugin(this));
+        this.getCommand("autosell").setExecutor(new SellPlugin(this));
 
 
     }

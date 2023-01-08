@@ -14,17 +14,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Locale;
+
 public class SellPlugin implements CommandExecutor, Listener {
     Main main;
     public FileConfiguration Prices;
     public LuckPerms luckPerms = LuckPermsProvider.get();
-    public boolean autoSell  = false;
+
     Economy economy = Main.getEconomy();
 
+    boolean autoSell;
     public SellPlugin(Main main) {
         this.main = main;
         File file = new File(main.getDataFolder(), "Prices.yml");
@@ -113,14 +116,13 @@ public class SellPlugin implements CommandExecutor, Listener {
                     message = message.replace("{VALUE}", bal + "");
                     message = message.replace("{AMOUNT}", itemNum + "");
                     player.sendMessage(message);
-                    player.getInventory().getItemInMainHand().setType(Material.AIR);
-
-
+                    ItemStack item = player.getItemInHand();
+                    player.getInventory().removeItem(item);
                 }
 
             }//sell hand
             else if (command.getName().equalsIgnoreCase("autosell")){//turns on auto sell
-                autoSell=!autoSell;
+                autoSell = true;
             }
             else if (command.getName().equalsIgnoreCase("sellinv")){//sells everything from the inventory
                 double totalValue=0;
@@ -131,9 +133,10 @@ public class SellPlugin implements CommandExecutor, Listener {
                         if(price!=0){
                             totalItems+=numOfItemsSlot(player,i);
                             totalValue+=numOfItemsSlot(player,i)*price;
-                            double bal = price * numOfItemsSlot(player,i)*price;
+                            double bal = numOfItemsSlot(player,i)*price;
                             economy.depositPlayer(player.getName(),bal);
-                            player.getInventory().getItem(i).setType(Material.AIR);
+                            ItemStack item = player.getInventory().getItem(i);
+                            player.getInventory().removeItem(item);
                         }
                     }
                 }
@@ -148,18 +151,21 @@ public class SellPlugin implements CommandExecutor, Listener {
     }
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent e){
+        e.getPlayer().sendMessage("Nerd");
         if(autoSell){
             Player player = e.getPlayer();
             for(int i=0;i<36;i++){
                 if(player.getInventory().getItem(i)!=null){
-                    double price = getPriceInv(e.getPlayer() ,i);
+                    double price = getPriceInv(player ,i);
                     if(price!=0){
-                        double bal = price * numOfItemsSlot(player,i)*price;
+                        double bal = numOfItemsSlot(player,i)*price;
                         economy.depositPlayer(player.getName(),bal);
-                        player.getInventory().getItem(i).setType(Material.AIR);
+                        ItemStack item = player.getInventory().getItem(i);
+                        player.getInventory().removeItem(item);
                     }
                 }
             }
         }
     }
+
 }
