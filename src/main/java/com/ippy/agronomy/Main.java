@@ -1,12 +1,14 @@
 package com.ippy.agronomy;
+
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.milkbowl.vault.economy.Economy;
-
 
 import java.util.logging.Logger;
 
-public final class Main extends JavaPlugin {
+public final class Main extends JavaPlugin implements Listener {
     private static Economy econ = null;
     private static final Logger log = Logger.getLogger("Minecraft");
 
@@ -14,6 +16,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+        Bukkit.getPluginManager().registerEvents(new SellPlugin(this),this);
 
         if (!setupEconomy() ) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -22,6 +25,7 @@ public final class Main extends JavaPlugin {
         }
         this.getCommand("sell").setExecutor(new SellPlugin(this));
         this.getCommand("sellhand").setExecutor(new SellPlugin(this));
+        this.getCommand("sellinv").setExecutor(new SellPlugin(this));
 
 
     }
@@ -40,8 +44,5 @@ public final class Main extends JavaPlugin {
         return econ;
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+
 }

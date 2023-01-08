@@ -9,3 +9,7 @@ commands:
     description: Sells all the items you're holding
   sellhand:
     description: Sells all the items from your hand
+  sellinv:
+    description: Sells all the items from your inventory
+  autosell:
+    description: toggles autosell
