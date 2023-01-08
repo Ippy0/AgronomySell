@@ -1,0 +1,11 @@
+name: Agronomy
+version: '${project.version}'
+main: com.ippy.agronomy.Main
+api-version: 1.19
+authors: [ Ippy ]
+description: Agronomy custom plugins
+commands:
+  sell:
+    description: Sells all the items you're holding
+  sellhand:
+    description: Sells all the items from your hand
